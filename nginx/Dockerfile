@@ -2,7 +2,6 @@ FROM		alpine:3.11.6
 RUN			apk update
 RUN			apk add openssl
 RUN			apk add nginx
-RUN			apk add openrc --no-cache
 
 RUN 		mkdir -p /run/nginx
 RUN			mkdir /etc/nginx/ssl && chmod 700 /etc/nginx/ssl && \
