@@ -12,7 +12,6 @@ spec:
       targetPort: 3306
   selector:
     app: mariadb
-
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -25,8 +24,6 @@ spec:
     matchLabels:
       app: mariadb
   replicas: 1
-  strategy:
-    type: Recreate
   template:
     metadata:
       labels:
@@ -45,7 +42,6 @@ spec:
         - name: mariadb-pv
           persistentVolumeClaim:
             claimName: mariadb-pvc
-
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -54,18 +50,15 @@ metadata:
   labels:
     type: local
 spec:
-  storageClassName: manual
   capacity:
-    storage: 500Mi
+    storage: 1Gi
   accessModes:
     - ReadWriteOnce
   hostPath:
     path: "/var/lib/mysql"
   claimRef:
     name: mysql-pvc
-
 ---
-
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -77,5 +70,4 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 500Mi
-
+      storage: 1Gi

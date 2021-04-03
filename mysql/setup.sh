@@ -16,4 +16,4 @@ rc-service mariadb start
 mysql < create_db.sql
 mysql -u root wordpress < my_db.sql
 rc-service mariadb stop
-/usr/bin/mysqld_safe  --datadir="/var/lib/mysql"
+/usr/bin/mysqld --datadir="/var/lib/mysql"
