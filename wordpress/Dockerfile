@@ -2,7 +2,7 @@ FROM alpine:3.11.6
 
 RUN apk add axel
 RUN apk add php7 php7-fpm php7-mysqli php7-zlib php7-curl php7-mbstring php7-json php7-session
-RUN apk add nginx tar
+RUN apk add nginx tar openrc supervisor
 RUN mkdir /www
 RUN mkdir -p /run/nginx
 
@@ -16,6 +16,7 @@ RUN rm latest.tar.gz
 WORKDIR /
 
 COPY wp-config.php /www/wordpress/
+COPY supervisord.conf /etc/
 COPY setup.sh .
 
 EXPOSE 5050
