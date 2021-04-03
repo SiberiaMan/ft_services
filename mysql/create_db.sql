@@ -1,7 +1,0 @@
--- CREATE DATABASE wordpress;
--- CREATE USER 'dchani'@'%' IDENTIFIED BY 'dchani';
--- GRANT ALL PRIVILEGES ON wordpress.sql TO 'dchani'@'%';
--- FLUSH PRIVILEGES;
-CREATE DATABASE wordpress;
-GRANT ALL PRIVILEGES ON *.* TO 'dchani'@'%' IDENTIFIED BY 'dchani' WITH GRANT OPTION;
-FLUSH PRIVILEGES;
