@@ -1,0 +1,102 @@
+apiVersion: v1  
+kind: PersistentVolumeClaim  
+metadata:  
+  name: influxdb-pvc
+spec:  
+  accessModes:  
+  - ReadWriteOnce  
+  resources:  
+    requests:  
+      storage: 1Gi
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: influxdb-pv
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 1Gi
+  hostPath:
+    path: "/mnt/influx"
+    type: DirectoryOrCreate
+  claimRef:
+    name: influxdb-pvc
+    namespace: default
+---    
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: influxdb
+  labels:
+   app: influxdb
+spec:
+  selector:
+    matchLabels:
+      app: influxdb
+  template:
+    metadata:
+      labels:
+        app: influxdb
+    spec:
+      containers:
+        - image: influxdb_service
+          name: influxdb-container
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8086
+              name: influxdb
+          volumeMounts:
+            - mountPath: /var/lib/influxdb
+              name: influxdb-pv
+            - mountPath: /etc/influxdb/influxdb.conf
+              name: influxdb-config
+              subPath: influxdb.conf
+              readOnly: true
+      volumes:
+        - name: influxdb-pv
+          persistentVolumeClaim:
+            claimName: influxdb-pvc
+        - name: influxdb-config
+          configMap:
+            name: influxdb-config
+--- 
+apiVersion: v1
+kind: Service
+metadata:
+  name: influxdb-service
+  labels:
+    app: influxdb
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8086
+      name: influxdb
+      targetPort: 8086
+  selector:
+    app: influxdb
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: influxdb-config
+  labels:
+    app: influxdb
+data:
+  influxdb.conf: |
+    bind-adress="127.0.0.1:8088"
+    [meta]
+      dir="/var/lib/influxdb/meta"
+    [data]
+      dir="/var/lib/influxdb/data"
+      wal-dir = "/var/lib/influxdb/wal"
+      trace-logging-enable=true
+    [http]
+      bind-addres=":8088"
+      log-enabled=true
+    [[graphite]]
+      database="telegraf"

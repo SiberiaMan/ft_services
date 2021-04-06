@@ -9,7 +9,8 @@ RUN     mv phpMyAdmin-5.0.2-all-languages /www/phpmyadmin
 RUN     rm phpMyAdmin-5.0.2-all-languages.tar.gz
 COPY    srcs/nginx.conf /etc/nginx/conf.d/default.conf
 COPY    srcs/config.inc.php /www/phpmyadmin/
-COPY    supervisord.conf /etc/
+COPY    srcs/supervisord.conf /etc/
+#COPY	stop-supervisor.sh .
 COPY    setup.sh .
 EXPOSE  5000
 CMD     ["sh","setup.sh"]

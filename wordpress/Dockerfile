@@ -6,7 +6,7 @@ RUN apk add nginx tar openrc supervisor
 RUN mkdir /www
 RUN mkdir -p /run/nginx
 
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY srcs/nginx.conf /etc/nginx/conf.d/default.conf
 
 WORKDIR /www
 RUN axel https://wordpress.org/latest.tar.gz -o latest.tar.gz
@@ -15,8 +15,8 @@ RUN rm latest.tar.gz
 
 WORKDIR /
 
-COPY wp-config.php /www/wordpress/
-COPY supervisord.conf /etc/
+COPY srcs/wp-config.php /www/wordpress/
+COPY srcs/supervisord.conf /etc/
 COPY setup.sh .
 
 EXPOSE 5050
